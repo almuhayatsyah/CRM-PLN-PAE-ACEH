@@ -1,0 +1,144 @@
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link } from "@inertiajs/react";
+
+export default function Index({ auth, interaksis }) {
+    // Hitung jumlah interaksi per status
+    const statusCount = {
+        Selesai: interaksis.filter((i) => i.status === "Selesai").length,
+        "Perlu Tindak Lanjut": interaksis.filter(
+            (i) => i.status === "Perlu Tindak Lanjut"
+        ).length,
+        "Menunggu Respon": interaksis.filter(
+            (i) => i.status === "Menunggu Respon"
+        ).length,
+    };
+    return (
+        <AuthenticatedLayout
+            user={auth.user}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    Riwayat Interaksi
+                </h2>
+            }
+        >
+            <Head title="Riwayat Interaksi" />
+            <div className="py-12">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    {/* Card Statistik Status Interaksi */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+                        <div className="bg-green-50 border border-green-200 rounded-lg shadow p-5 flex flex-col items-center">
+                            <span className="text-sm text-green-600 font-medium">
+                                Selesai
+                            </span>
+                            <span className="text-3xl font-bold text-green-800">
+                                {statusCount.Selesai}
+                            </span>
+                        </div>
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg shadow p-5 flex flex-col items-center">
+                            <span className="text-sm text-yellow-600 font-medium">
+                                Perlu Tindak Lanjut
+                            </span>
+                            <span className="text-3xl font-bold text-yellow-800">
+                                {statusCount["Perlu Tindak Lanjut"]}
+                            </span>
+                        </div>
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg shadow p-5 flex flex-col items-center">
+                            <span className="text-sm text-blue-600 font-medium">
+                                Menunggu Respon
+                            </span>
+                            <span className="text-3xl font-bold text-blue-800">
+                                {statusCount["Menunggu Respon"]}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="bg-white shadow-md rounded-xl p-6">
+                        <div className="overflow-x-auto rounded-lg border border-gray-200">
+                            <table className="min-w-full divide-y divide-gray-200 text-sm">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">
+                                            No.
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">
+                                            Tanggal
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">
+                                            Nama Pelanggan
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">
+                                            Jenis
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">
+                                            Dicatat Oleh
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {interaksis.length > 0 ? (
+                                        interaksis.map((interaksi, index) => (
+                                            <tr
+                                                key={interaksi.id}
+                                                className="hover:bg-gray-50 transition"
+                                            >
+                                                <td className="px-6 py-4">
+                                                    {index + 1}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {new Date(
+                                                        interaksi.created_at
+                                                    ).toLocaleDateString(
+                                                        "id-ID",
+                                                        {
+                                                            day: "2-digit",
+                                                            month: "long",
+                                                            year: "numeric",
+                                                        }
+                                                    )}
+                                                </td>
+                                                <td className="px-6 py-4 font-medium text-blue-600 hover:underline">
+                                                    <Link
+                                                        href={route(
+                                                            "pelanggan.show",
+                                                            interaksi.pelanggan
+                                                                .id
+                                                        )}
+                                                    >
+                                                        {interaksi.pelanggan
+                                                            ?.nama_perusahaan ||
+                                                            "-"}
+                                                    </Link>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {interaksi.jenis}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {interaksi.status}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    {interaksi.user?.name ||
+                                                        "-"}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan="6"
+                                                className="px-6 py-8 text-center text-gray-500"
+                                            >
+                                                Belum ada data interaksi.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </AuthenticatedLayout>
+    );
+}
