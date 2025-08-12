@@ -146,8 +146,13 @@ class PelangganController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pelanggan $pelanggan): RedirectResponse
+    public function destroy(Request $request, Pelanggan $pelanggan): RedirectResponse
     {
+        // Cek apakah user adalah manajer, jika ya tolak akses
+        if ($request->user()->hasRole('Manajer')) {
+            return redirect()->back()->with('error', 'Manajer tidak diizinkan menghapus data pelanggan.');
+        }
+
         // Hapus data pelanggan dari database
         $pelanggan->delete();
 

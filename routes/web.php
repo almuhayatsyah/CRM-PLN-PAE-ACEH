@@ -34,7 +34,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 
     // Resource Routes
-    Route::resource('pelanggan', PelangganController::class)->middleware('role:Admin|Staff|Manajer');
+    // Ganti resource route pelanggan dengan route yang lebih spesifik
+    // Route::resource('pelanggan', PelangganController::class)->middleware('role:Admin|Staff|Manajer');
+
+    // Rute yang bisa diakses oleh Admin, Staff, dan Manajer
+    Route::controller(PelangganController::class)->middleware('role:Admin|Staff|Manajer')->group(function () {
+        Route::get('/pelanggan', 'index')->name('pelanggan.index');
+        Route::get('/pelanggan/{pelanggan}', 'show')->name('pelanggan.show')->whereNumber('pelanggan');
+    });
+
+    // Rute yang hanya bisa diakses oleh Admin dan Staff
+    Route::controller(PelangganController::class)->middleware('role:Admin|Staff')->group(function () {
+        Route::get('/pelanggan/create', 'create')->name('pelanggan.create');
+        Route::post('/pelanggan', 'store')->name('pelanggan.store');
+        Route::get('/pelanggan/{pelanggan}/edit', 'edit')->name('pelanggan.edit')->whereNumber('pelanggan');
+        Route::put('/pelanggan/{pelanggan}', 'update')->name('pelanggan.update')->whereNumber('pelanggan');
+        Route::delete('/pelanggan/{pelanggan}', 'destroy')->name('pelanggan.destroy')->whereNumber('pelanggan');
+    });
     Route::resource('users', UserController::class)->middleware('role:Admin');
     Route::resource('interaksi', InteraksiController::class)->middleware('role:Admin|Staff|Manajer');
     Route::resource('jadwal-kunjungan', JadwalKunjunganController::class)->middleware('role:Admin|Staff|Manajer');

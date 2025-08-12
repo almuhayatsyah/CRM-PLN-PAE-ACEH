@@ -9,6 +9,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         monitoring: false,
         laporan: false,
         users: false,
+        aktivitas: false, // Tambahkan state untuk dropdown aktivitas
     });
 
     const hasRole = (roleName) =>
@@ -119,7 +120,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
                                         strokeWidth={2}
-                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                                     />
                                     <path
                                         strokeLinecap="round"
@@ -222,11 +223,113 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                                                 Daftar Pelanggan
                                             </NavLink>
                                         </li>
+                                        {/* Tampilkan tombol Tambah Pelanggan hanya untuk Admin dan Staff */}
+                                        {(isAdmin || isStaff) && (
+                                            <li>
+                                                <NavLink
+                                                    href={route(
+                                                        "pelanggan.create"
+                                                    )}
+                                                    active={route().current(
+                                                        "pelanggan.create"
+                                                    )}
+                                                    className={({ isActive }) =>
+                                                        `flex items-center p-2 rounded-lg transition-all    duration-200 text-sm
+                                                        ${
+                                                            isActive
+                                                                ? "bg-blue-100 text-blue-600 font-semibold"
+                                                                : "text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                                                        }`
+                                                    }
+                                                >
+                                                    <svg
+                                                        className="w-4 h-4 mr-2"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                                        />
+                                                    </svg>
+                                                    Tambah Pelanggan
+                                                </NavLink>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            </li>
+                        )}
+
+                        {/* Aktivitas Saya - Khusus Staff */}
+                        {isStaff && (
+                            <li>
+                                <button
+                                    onClick={() => toggleMenu("aktivitas")}
+                                    className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-300 group hover:shadow-lg hover:-translate-y-0.5
+                                    ${
+                                        expandedMenus.aktivitas ||
+                                        route().current("feedback.*") ||
+                                        route().current("jadwal-kunjungan.*") ||
+                                        route().current("interaksi.*")
+                                            ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/50"
+                                            : "text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-blue-600"
+                                    }`}
+                                >
+                                    <div className="flex items-center">
+                                        <svg
+                                            className="w-5 h-5 mr-3"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                            />
+                                        </svg>
+                                        <span className="font-medium">
+                                            Aktivitas Saya
+                                        </span>
+                                    </div>
+                                    <svg
+                                        className={`w-4 h-4 transition-transform duration-300 ${
+                                            expandedMenus.aktivitas
+                                                ? "rotate-180"
+                                                : ""
+                                        }`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M19 9l-7 7-7-7"
+                                        />
+                                    </svg>
+                                </button>
+
+                                {/* Dropdown Content */}
+                                <div
+                                    className={`overflow-hidden transition-all duration-300 ${
+                                        expandedMenus.aktivitas
+                                            ? "max-h-60 opacity-100"
+                                            : "max-h-0 opacity-0"
+                                    }`}
+                                >
+                                    <ul className="mt-2 space-y-1 pl-8">
                                         <li>
                                             <NavLink
-                                                href={route("pelanggan.create")}
+                                                href={route("feedback.index")}
                                                 active={route().current(
-                                                    "pelanggan.create"
+                                                    "feedback.*"
                                                 )}
                                                 className={({ isActive }) =>
                                                     `flex items-center p-2 rounded-lg transition-all duration-200 text-sm
@@ -247,151 +350,78 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                                                         strokeLinecap="round"
                                                         strokeLinejoin="round"
                                                         strokeWidth={2}
-                                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                                        d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
                                                     />
                                                 </svg>
-                                                Tambah Pelanggan
+                                                Feedback Masuk
+                                            </NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink
+                                                href={route(
+                                                    "jadwal-kunjungan.index"
+                                                )}
+                                                active={route().current(
+                                                    "jadwal-kunjungan.*"
+                                                )}
+                                                className={({ isActive }) =>
+                                                    `flex items-center p-2 rounded-lg transition-all duration-200 text-sm
+                                                    ${
+                                                        isActive
+                                                            ? "bg-blue-100 text-blue-600 font-semibold"
+                                                            : "text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                                                    }`
+                                                }
+                                            >
+                                                <svg
+                                                    className="w-4 h-4 mr-2"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                    />
+                                                </svg>
+                                                Jadwal Kunjungan
+                                            </NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink
+                                                href={route("interaksi.index")}
+                                                active={route().current(
+                                                    "interaksi.*"
+                                                )}
+                                                className={({ isActive }) =>
+                                                    `flex items-center p-2 rounded-lg transition-all duration-200 text-sm
+                                                    ${
+                                                        isActive
+                                                            ? "bg-blue-100 text-blue-600 font-semibold"
+                                                            : "text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                                                    }`
+                                                }
+                                            >
+                                                <svg
+                                                    className="w-4 h-4 mr-2"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                                    />
+                                                </svg>
+                                                Interaksi
                                             </NavLink>
                                         </li>
                                     </ul>
                                 </div>
-                            </li>
-                        )}
-
-                        {/* Aktivitas Saya - Khusus Staff */}
-                        {isStaff && (
-                            <li>
-                                <div className="px-3 text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                                    Aktivitas Saya
-                                </div>
-                                <ul className="mt-2 space-y-1">
-                                    <li>
-                                        <NavLink
-                                            href={route("feedback.index")}
-                                            active={route().current(
-                                                "feedback.*"
-                                            )}
-                                            className={({ isActive }) =>
-                                                `flex items-center p-3 rounded-xl transition-all duration-200 text-sm border
-                                                ${
-                                                    isActive
-                                                        ? "bg-blue-50 text-blue-600 border-blue-200"
-                                                        : "text-gray-700 hover:bg-gray-50 hover:text-blue-600 border-gray-200"
-                                                }`
-                                            }
-                                        >
-                                            <svg
-                                                className="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                                                />
-                                            </svg>
-                                            Feedback Masuk
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink
-                                            href={route(
-                                                "jadwal-kunjungan.index"
-                                            )}
-                                            active={route().current(
-                                                "jadwal-kunjungan.*"
-                                            )}
-                                            className={({ isActive }) =>
-                                                `flex items-center p-3 rounded-xl transition-all duration-200 text-sm border
-                                                ${
-                                                    isActive
-                                                        ? "bg-blue-50 text-blue-600 border-blue-200"
-                                                        : "text-gray-700 hover:bg-gray-50 hover:text-blue-600 border-gray-200"
-                                                }`
-                                            }
-                                        >
-                                            <svg
-                                                className="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                                />
-                                            </svg>
-                                            Jadwal Kunjungan
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink
-                                            href={route("interaksi.index")}
-                                            active={route().current(
-                                                "interaksi.*"
-                                            )}
-                                            className={({ isActive }) =>
-                                                `flex items-center p-3 rounded-xl transition-all duration-200 text-sm border
-                                                ${
-                                                    isActive
-                                                        ? "bg-blue-50 text-blue-600 border-blue-200"
-                                                        : "text-gray-700 hover:bg-gray-50 hover:text-blue-600 border-gray-200"
-                                                }`
-                                            }
-                                        >
-                                            <svg
-                                                className="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                                />
-                                            </svg>
-                                            Interaksi
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink
-                                            href={route("notifikasi.index")}
-                                            active={route().current(
-                                                "notifikasi.index"
-                                            )}
-                                            className={({ isActive }) =>
-                                                `flex items-center p-3 rounded-xl transition-all duration-200 text-sm border
-                                                ${
-                                                    isActive
-                                                        ? "bg-blue-50 text-blue-600 border-blue-200"
-                                                        : "text-gray-700 hover:bg-gray-50 hover:text-blue-600 border-gray-200"
-                                                }`
-                                            }
-                                        >
-                                            <svg
-                                                className="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                                                />
-                                            </svg>
-                                            Notifikasi
-                                        </NavLink>
-                                    </li>
-                                </ul>
                             </li>
                         )}
 
@@ -425,7 +455,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                                             />
                                         </svg>
                                         <span className="font-medium">
-                                            Aktivitas Staff
+                                            Monitoring Aktivitas
                                         </span>
                                     </div>
                                     <svg

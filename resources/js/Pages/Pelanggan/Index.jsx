@@ -50,27 +50,29 @@ export default function Index({
                     <div className="modern-card overflow-hidden">
                         <div className="p-6 text-gray-900">
                             {/* Tombol Tambah */}
-                            <div className="mb-6 flex justify-start">
-                                <Link
-                                    href={route("pelanggan.create")}
-                                    className="btn-primary-modern inline-flex items-center"
-                                >
-                                    <svg
-                                        className="w-4 h-4 mr-2"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
+                            {!auth.user.roles.includes("Manajer") && (
+                                <div className="mb-6 flex justify-start">
+                                    <Link
+                                        href={route("pelanggan.create")}
+                                        className="btn-primary-modern inline-flex items-center"
                                     >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                                        />
-                                    </svg>
-                                    Tambah Pelanggan Baru
-                                </Link>
-                            </div>
+                                        <svg
+                                            className="w-4 h-4 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                            />
+                                        </svg>
+                                        Tambah Pelanggan Baru
+                                    </Link>
+                                </div>
+                            )}
 
                             {/* Dropdown Filter */}
                             <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -282,31 +284,37 @@ export default function Index({
                                                             >
                                                                 Detail
                                                             </Link>
-                                                            <Link
-                                                                href={route(
-                                                                    "pelanggan.edit",
-                                                                    pelanggan.id
-                                                                )}
-                                                                className="text-indigo-600 hover:text-indigo-900"
-                                                            >
-                                                                Edit
-                                                            </Link>
-                                                            <Link
-                                                                href={route(
-                                                                    "pelanggan.destroy",
-                                                                    pelanggan.id
-                                                                )}
-                                                                method="delete"
-                                                                as="button"
-                                                                className="text-red-600 hover:text-red-900"
-                                                                onBefore={() =>
-                                                                    confirm(
-                                                                        "Apakah Anda yakin ingin menghapus data ini?"
-                                                                    )
-                                                                }
-                                                            >
-                                                                Hapus
-                                                            </Link>
+                                                            {!auth.user.roles.includes(
+                                                                "Manajer"
+                                                            ) && (
+                                                                <>
+                                                                    <Link
+                                                                        href={route(
+                                                                            "pelanggan.edit",
+                                                                            pelanggan.id
+                                                                        )}
+                                                                        className="text-indigo-600 hover:text-indigo-900"
+                                                                    >
+                                                                        Edit
+                                                                    </Link>
+                                                                    <Link
+                                                                        href={route(
+                                                                            "pelanggan.destroy",
+                                                                            pelanggan.id
+                                                                        )}
+                                                                        method="delete"
+                                                                        as="button"
+                                                                        className="text-red-600 hover:text-red-900"
+                                                                        onBefore={() =>
+                                                                            confirm(
+                                                                                "Apakah Anda yakin ingin menghapus data ini?"
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Hapus
+                                                                    </Link>
+                                                                </>
+                                                            )}
                                                         </td>
                                                     </tr>
                                                 )
