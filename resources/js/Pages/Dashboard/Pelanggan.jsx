@@ -1,17 +1,17 @@
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import InputLabel from "@/Components/InputLabel";
-import InputError from "@/Components/InputError";
-import PrimaryButton from "@/Components/PrimaryButton";
 // Contoh: gunakan chart dari Recharts
 import {
-    LineChart,
-    Line,
     CartesianGrid,
+    Line,
+    LineChart,
+    ResponsiveContainer,
+    Tooltip,
     XAxis,
     YAxis,
-    Tooltip,
-    ResponsiveContainer,
 } from "recharts";
 
 const getGreeting = () => {
@@ -65,15 +65,16 @@ export default function PelangganDashboard({ auth, pelanggan }) {
                 </h2>
             }
         >
+            {" "}
             <Head title="Dashboard Pelanggan" />
-
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
                     <div className="modern-card p-8">
                         <div className="flex items-center justify-between">
                             <div>
                                 <h1 className="text-3xl font-bold gradient-text mb-2">
-                                    {getGreeting()}, {auth.user.name}! 👋
+                                    {getGreeting()}, {pelanggan.nama_perusahaan}
+                                    ! 👋
                                     <p className="text-lg text-gray-600">
                                         Anda Login Sebagai Pelanggan Prioritas
                                         Kami 👤
@@ -130,6 +131,14 @@ export default function PelangganDashboard({ auth, pelanggan }) {
                                 </span>
                                 <span className="text-gray-900">
                                     {pelanggan.alamat_perusahaan}
+                                </span>
+                            </div>
+                            <div className="flex justify-between border-b pb-2">
+                                <span className="text-gray-500 font-medium">
+                                    Kriteria Prioritas
+                                </span>
+                                <span className="text-gray-900">
+                                    {pelanggan.kriteria_prioritas}
                                 </span>
                             </div>
                             <div className="flex justify-between border-b pb-2">
@@ -340,6 +349,170 @@ export default function PelangganDashboard({ auth, pelanggan }) {
                                 Kirim Feedback
                             </PrimaryButton>
                         </form>
+                    </div>
+
+                    {/* --- Riwayat Feedback --- */}
+                    <div className="bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
+                        <h3 className="text-xl font-semibold text-gray-800 border-b pb-3 mb-4">
+                            Riwayat Feedback 📝
+                        </h3>
+                        {pelanggan.feedbacks &&
+                        pelanggan.feedbacks.length > 0 ? (
+                            <div className="space-y-4">
+                                {pelanggan.feedbacks
+                                    .sort(
+                                        (a, b) =>
+                                            new Date(b.created_at) -
+                                            new Date(a.created_at)
+                                    )
+                                    .map((feedback) => (
+                                        <div
+                                            key={feedback.id}
+                                            className={`border rounded-lg p-4 transition-colors ${
+                                                feedback.tanggapan_pln
+                                                    ? "border-green-200 bg-green-50 hover:bg-green-100"
+                                                    : feedback.status ===
+                                                      "Selesai"
+                                                    ? "border-blue-200 bg-blue-50 hover:bg-blue-100"
+                                                    : "border-gray-200 bg-white hover:bg-gray-50"
+                                            }`}
+                                        >
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="flex space-x-1">
+                                                        {[...Array(5)].map(
+                                                            (_, i) => (
+                                                                <span
+                                                                    key={i}
+                                                                    className={`text-lg ${
+                                                                        i <
+                                                                        feedback.skor
+                                                                            ? "text-yellow-400"
+                                                                            : "text-gray-300"
+                                                                    }`}
+                                                                >
+                                                                    ⭐
+                                                                </span>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                    <span className="text-sm text-gray-500">
+                                                        {new Date(
+                                                            feedback.created_at
+                                                        ).toLocaleDateString(
+                                                            "id-ID",
+                                                            {
+                                                                day: "numeric",
+                                                                month: "long",
+                                                                year: "numeric",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                            }
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    {feedback.tanggapan_pln && (
+                                                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                                            ✅ Dibalas
+                                                        </span>
+                                                    )}
+                                                    <span
+                                                        className={`px-3 py-1 text-xs font-semibold rounded-full ${getStatusBadge(
+                                                            feedback.status
+                                                        )}`}
+                                                    >
+                                                        {feedback.status}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="mb-3">
+                                                <h4 className="font-medium text-gray-900 mb-2">
+                                                    Feedback Anda:
+                                                </h4>
+                                                <p className="text-gray-700 bg-white p-3 rounded-md border">
+                                                    {feedback.komentar}
+                                                </p>
+                                            </div>
+
+                                            {feedback.tanggapan_pln ? (
+                                                <div className="border-l-4 border-green-500 pl-4 bg-white p-3 rounded-r-md border">
+                                                    <h4 className="font-medium text-green-900 mb-2">
+                                                        Tanggapan PLN:
+                                                    </h4>
+                                                    <p className="text-green-800">
+                                                        {feedback.tanggapan_pln}
+                                                    </p>
+                                                    {feedback.responder && (
+                                                        <p className="text-sm text-green-600 mt-2">
+                                                            <span className="font-medium">
+                                                                Dibalas oleh:
+                                                            </span>{" "}
+                                                            {feedback.responder}
+                                                        </p>
+                                                    )}
+                                                    {feedback.tanggal_tanggapan && (
+                                                        <p className="text-sm text-green-600">
+                                                            <span className="font-medium">
+                                                                Tanggal:
+                                                            </span>{" "}
+                                                            {new Date(
+                                                                feedback.tanggal_tanggapan
+                                                            ).toLocaleDateString(
+                                                                "id-ID",
+                                                                {
+                                                                    day: "numeric",
+                                                                    month: "long",
+                                                                    year: "numeric",
+                                                                    hour: "2-digit",
+                                                                    minute: "2-digit",
+                                                                }
+                                                            )}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div className="border-l-4 border-yellow-500 pl-4 bg-yellow-50 p-3 rounded-r-md">
+                                                    <div className="flex items-center space-x-2">
+                                                        <span className="text-yellow-600">
+                                                            ⏳
+                                                        </span>
+                                                        <p className="text-yellow-800 font-medium">
+                                                            Menunggu tanggapan
+                                                            dari tim PLN...
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {feedback.follow_up && (
+                                                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                                    <h4 className="font-medium text-blue-900 mb-2">
+                                                        Tindak Lanjut:
+                                                    </h4>
+                                                    <p className="text-blue-800">
+                                                        {feedback.follow_up}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8">
+                                <div className="text-gray-400 text-6xl mb-4">
+                                    📝
+                                </div>
+                                <p className="text-gray-500 text-lg mb-2">
+                                    Belum ada feedback yang dikirim
+                                </p>
+                                <p className="text-gray-400 text-sm">
+                                    Kirim feedback pertama Anda menggunakan form
+                                    di atas
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

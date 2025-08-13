@@ -54,9 +54,15 @@ export default function Index({ auth, pemakaianDayas, stats }) {
                                                     : ""
                                             }`}
                                         >
-                                            <td className="px-6 py-4">
-                                                {daya.bulan_tahun}
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                {new Date(
+                                                    daya.bulan_tahun + "-01"
+                                                ).toLocaleDateString("id-ID", {
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })}
                                             </td>
+
                                             <td className="px-6 py-4 font-medium text-blue-600 hover:underline">
                                                 <Link
                                                     href={route(

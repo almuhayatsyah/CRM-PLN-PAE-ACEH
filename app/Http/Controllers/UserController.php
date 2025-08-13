@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Pelanggan; // <-- 1. Tambahkan model Pelanggan
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
@@ -20,7 +21,7 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-        $users = User::with('roles')->latest()->get();
+        $users = User::with(['roles', 'pelanggan'])->latest()->get();
 
         return Inertia::render('Users/Index', [
             'users' => $users,
@@ -74,7 +75,7 @@ class UserController extends Controller
      */
     public function edit(User $user): Response
     {
-        $user->load('roles');
+        $user->load(['roles', 'pelanggan']);
         $roles = Role::all();
         $pelanggans = Pelanggan::orderBy('nama_perusahaan')->get();
 
@@ -119,7 +120,7 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
-        if ($user->id === auth()->id()) {
+        if ($user->id === Auth::id()) {
             // Menggunakan flash message error
             return redirect(route('users.index'))->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }

@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('interaksi', InteraksiController::class)->middleware('role:Admin|Staff|Manajer');
     Route::resource('jadwal-kunjungan', JadwalKunjunganController::class)->middleware('role:Admin|Staff|Manajer');
     Route::resource('feedback', FeedbackController::class)->middleware('auth');
+    Route::post('/feedback/{feedback}/respond', [FeedbackController::class, 'respond'])->name('feedback.respond')->middleware('role:Admin|Staff|Manajer');
     Route::resource('pemakaian-daya', PemakaianDayaController::class)->middleware('role:Admin|Staff|Manajer');
     Route::get('/laporan/feedback', [LaporanController::class, 'feedback'])->name('laporan.feedback')->middleware('role:Admin|Manajer|Staff');
 

@@ -18,7 +18,9 @@ class Feedback extends Model
         'status',
         'catatan_tindak_lanjut',
         'ditindak_lanjuti_oleh',
-
+        'tanggapan_pln',
+        'responder',
+        'tanggal_tanggapan',
     ];
 
     public function pelanggan(): BelongsTo

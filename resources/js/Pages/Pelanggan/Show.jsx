@@ -1,6 +1,6 @@
+import PowerUsageChart from "@/Components/PowerUsageChart";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
-import PowerUsageChart from "@/Components/PowerUsageChart";
 
 export default function Show({ auth, pelanggan }) {
     return (
@@ -451,8 +451,18 @@ export default function Show({ auth, pelanggan }) {
                                                     }
                                                 >
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                        {daya.bulan_tahun}
+                                                        {new Date(
+                                                            daya.bulan_tahun +
+                                                                "-01"
+                                                        ).toLocaleDateString(
+                                                            "id-ID",
+                                                            {
+                                                                month: "long",
+                                                                year: "numeric",
+                                                            }
+                                                        )}
                                                     </td>
+
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                         {new Intl.NumberFormat(
                                                             "id-ID"

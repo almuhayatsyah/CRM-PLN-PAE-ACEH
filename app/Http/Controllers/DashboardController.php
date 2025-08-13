@@ -95,7 +95,7 @@ class DashboardController extends Controller
             $user->load(['pelanggan' => function ($query) {
                 $query->with([
                     'feedbacks' => function ($query) {
-                        $query->latest()->with('penindakLanjut:id,name');
+                        $query->latest()->with(['penindakLanjut:id,name']);
                     },
                     'pemakaianDayas' => function ($query) {
                         $query->oldest('bulan_tahun');

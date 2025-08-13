@@ -69,6 +69,12 @@ export default function Index({ auth, users }) {
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                             Email
                                                         </th>
+                                                        {role ===
+                                                            "Pelanggan" && (
+                                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                Nama Perusahaan
+                                                            </th>
+                                                        )}
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                             Peran (Role)
                                                         </th>
@@ -100,6 +106,15 @@ export default function Index({ auth, users }) {
                                                                             user.email
                                                                         }
                                                                     </td>
+                                                                    {role ===
+                                                                        "Pelanggan" && (
+                                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                                            {user
+                                                                                .pelanggan
+                                                                                ?.nama_perusahaan ||
+                                                                                "-"}
+                                                                        </td>
+                                                                    )}
                                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                                         {user
                                                                             .roles
@@ -155,7 +170,12 @@ export default function Index({ auth, users }) {
                                                     ) : (
                                                         <tr>
                                                             <td
-                                                                colSpan="5"
+                                                                colSpan={
+                                                                    role ===
+                                                                    "Pelanggan"
+                                                                        ? 6
+                                                                        : 5
+                                                                }
                                                                 className="px-6 py-8 text-center text-gray-500"
                                                             >
                                                                 Belum ada

@@ -384,7 +384,7 @@ export default function Welcome({ auth, pelanggans }) {
                                 </p>
                                 <div className="flex space-x-4">
                                     <a
-                                        href="#"
+                                        href="https://www.facebook.com/profile.php?id=100057241368943"
                                         className="text-gray-400 hover:text-white"
                                     >
                                         <span className="sr-only">
@@ -403,7 +403,7 @@ export default function Welcome({ auth, pelanggans }) {
                                         </svg>
                                     </a>
                                     <a
-                                        href="#"
+                                        href="https://www.instagram.com/plnaceh/"
                                         className="text-gray-400 hover:text-white"
                                     >
                                         <span className="sr-only">
@@ -422,7 +422,7 @@ export default function Welcome({ auth, pelanggans }) {
                                         </svg>
                                     </a>
                                     <a
-                                        href="#"
+                                        href="https://x.com/plnacehofficial"
                                         className="text-gray-400 hover:text-white"
                                     >
                                         <span className="sr-only">Twitter</span>

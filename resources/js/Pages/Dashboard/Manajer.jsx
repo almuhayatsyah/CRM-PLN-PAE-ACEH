@@ -1,17 +1,17 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import {
-    PieChart,
-    Pie,
-    Cell,
-    ResponsiveContainer,
-    Legend,
-    Tooltip,
-    BarChart,
     Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Legend,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
     XAxis,
     YAxis,
-    CartesianGrid,
 } from "recharts";
 
 export default function ManajerDashboard({
@@ -43,6 +43,14 @@ export default function ManajerDashboard({
         }
     };
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 11) return "Selamat pagi";
+        if (hour >= 11 && hour < 15) return "Selamat siang";
+        if (hour >= 15 && hour < 18) return "Selamat sore";
+        return "Selamat malam";
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -52,6 +60,39 @@ export default function ManajerDashboard({
                 </h2>
             }
         >
+            <div className="modern-card p-8">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold gradient-text mb-2">
+                            {getGreeting()}, {auth.user.name}! 👋
+                            <p className="text-lg text-gray-600">
+                                Anda Login Sebagai Manajer
+                            </p>
+                        </h1>
+                        <p className="text-gray-600 text-lg">
+                            Selamat datang di CRM PAE Aceh. Kelola pelanggan dan
+                            aktivitas Anda dengan mudah.
+                        </p>
+                    </div>
+                    <div className="hidden md:block">
+                        <div className="w-24 h-24 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                            <svg
+                                className="w-12 h-12 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <Head title="Dashboard Manajer" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

@@ -97,6 +97,34 @@ class FeedbackController extends Controller
         return redirect()->route('feedback.index')->with('success', 'Tindak lanjut feedback berhasil disimpan.');
     }
 
+    /**
+     * Respond to feedback from PLN team
+     */
+    public function respond(Request $request, Feedback $feedback): RedirectResponse
+    {
+        $validated = $request->validate([
+            'tanggapan_pln' => 'required|string|min:10',
+            'status' => 'required|string|in:Diproses,Selesai',
+            'follow_up' => 'nullable|string',
+        ]);
+
+        $validated['responder'] = $request->user()->name;
+        $validated['tanggal_tanggapan'] = now();
+
+        $feedback->update($validated);
+
+        // Kirim notifikasi ke pelanggan
+        $customerUser = User::where('pelanggan_id', $feedback->pelanggan_id)->first();
+        if ($customerUser) {
+            Notifikasi::create([
+                'user_id' => $customerUser->id,
+                'pesan' => "Feedback Anda telah dibalas oleh tim PLN. Silakan cek dashboard Anda."
+            ]);
+        }
+
+        return redirect()->route('feedback.index')->with('success', 'Tanggapan PLN berhasil disimpan.');
+    }
+
 
     public function destroy(Feedback $feedback): RedirectResponse
     {
