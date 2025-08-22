@@ -203,7 +203,7 @@ export default function Welcome({ auth, pelanggans }) {
                             </span>
                             <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
                                 Sistem CRM{" "}
-                                <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                                <span className="text-blue-500">
                                     Pelanggan Prioritas
                                 </span>
                             </h1>
